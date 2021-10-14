@@ -3,11 +3,11 @@ import "./TrackList.css";
 import Track from "../Track/Track";
 
 function TrackList(props) {
-  const tracks = props.tracks;
-  const trackList = tracks !== undefined ? tracks : [];
+  const tracks = props.tracks !== undefined ? props.tracks : [];
+
   return (
     <div className="TrackList">
-      {trackList.map((track) => (
+      {tracks.map((track) => (
         <Track
           key={track.id}
           track={track}

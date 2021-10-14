@@ -2,7 +2,7 @@ import "./App.css";
 import SearchBar from "../SearchBar/SearchBar";
 import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const searchData = [
   {
@@ -25,7 +25,7 @@ const searchData = [
   },
 ];
 
-const trackListData = [
+const pTracks = [
   {
     name: "8 miles",
     artist: "Eminem",
@@ -46,32 +46,26 @@ const trackListData = [
   },
 ];
 
-const playlistData = {
-  playlistName: "IvaanGBx",
-  tracklist: trackListData,
-};
-
 function App() {
-  const [searchResults, setSearchResults] = useState([]);
-  useEffect(() => setSearchResults(searchData), []);
+  const [searchResults /* setSearchResults */] = useState(searchData);
 
-  const [playlist, setPlaylist] = useState([]);
-  useEffect(() => setPlaylist(playlistData), []);
+  const [playlistName, setPlaylistName] = useState(["Playlist Name"]);
+
+  const [playlistTracks, setPlaylistTracks] = useState(pTracks);
 
   const addTrack = (track) => {
-    setPlaylist((prev) => {
-      !prev.tracklist.includes(track) && prev.tracklist.push(track);
-      return prev;
-    });
+    setPlaylistTracks((prev) =>
+      prev.includes(track) ? prev : [...prev, track]
+    );
   };
 
   const removeTrack = (track) => {
-    setPlaylist((prev) => {
-      prev.tracklist = prev.tracklist.filter(
-        (prevTrack) => prevTrack.id !== track.id
-      );
-      return prev;
-    });
+    setPlaylistTracks((prev) => prev.filter((t) => t !== track));
+  };
+
+  const updatePlaylistName = (name) => {
+    setPlaylistName(name);
+    console.log(playlistName);
   };
 
   return (
@@ -83,10 +77,13 @@ function App() {
         <SearchBar />
         <div className="App-playlist">
           <SearchResults searchResults={searchResults} onAdd={addTrack} />
+
           <Playlist
-            playlist={playlist}
+            playlistName={playlistName}
+            playlistTracks={playlistTracks}
             onRemove={removeTrack}
             isRemoval={true}
+            onNameChange={updatePlaylistName}
           />
         </div>
       </div>

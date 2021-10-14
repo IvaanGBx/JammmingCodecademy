@@ -3,12 +3,18 @@ import "./Playlist.css";
 import TrackList from "../TrackList/TrackList";
 
 function Playlist(props) {
-  const play = props.playlist !== undefined ? props.playlist : {};
+  const playlistTracks =
+    props.playlistTracks !== undefined ? props.playlistTracks : {};
+
+  const handleChange = ({ target }) => {
+    props.onNameChange(target.value);
+  };
+
   return (
     <div className="Playlist">
-      <input defaultValue={"New Playlist"} />
+      <input onChange={handleChange} value={props.playlistName} minLength="2" />
       <TrackList
-        tracks={play.tracklist}
+        tracks={playlistTracks}
         onRemove={props.onRemove}
         isRemoval={true}
       />
