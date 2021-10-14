@@ -2,8 +2,9 @@ import "./App.css";
 import SearchBar from "../SearchBar/SearchBar";
 import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
+import { useState, useEffect } from "react";
 
-const searchResults = [
+const searchData = [
   {
     name: "Circles",
     artist: "Mac Miller",
@@ -24,12 +25,55 @@ const searchResults = [
   },
 ];
 
-const playlist = {
+const trackListData = [
+  {
+    name: "8 miles",
+    artist: "Eminem",
+    album: "8 miles",
+    id: 5,
+  },
+  {
+    name: "I'm not the only one",
+    artist: "Sam Smith",
+    album: "",
+    id: 6,
+  },
+  {
+    name: "Rolling in the deep",
+    artist: "Adele",
+    album: "21",
+    id: 7,
+  },
+];
+
+const playlistData = {
   playlistName: "IvaanGBx",
-  tracklist: searchResults,
+  tracklist: trackListData,
 };
 
 function App() {
+  const [searchResults, setSearchResults] = useState([]);
+  useEffect(() => setSearchResults(searchData), []);
+
+  const [playlist, setPlaylist] = useState([]);
+  useEffect(() => setPlaylist(playlistData), []);
+
+  const addTrack = (track) => {
+    setPlaylist((prev) => {
+      !prev.tracklist.includes(track) && prev.tracklist.push(track);
+      return prev;
+    });
+  };
+
+  const removeTrack = (track) => {
+    setPlaylist((prev) => {
+      prev.tracklist = prev.tracklist.filter(
+        (prevTrack) => prevTrack.id !== track.id
+      );
+      return prev;
+    });
+  };
+
   return (
     <div>
       <h1>
@@ -38,8 +82,12 @@ function App() {
       <div className="App">
         <SearchBar />
         <div className="App-playlist">
-          <SearchResults searchResults={searchResults} />
-          <Playlist playlist={playlist} />
+          <SearchResults searchResults={searchResults} onAdd={addTrack} />
+          <Playlist
+            playlist={playlist}
+            onRemove={removeTrack}
+            isRemoval={true}
+          />
         </div>
       </div>
     </div>
